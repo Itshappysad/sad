@@ -1,12 +1,18 @@
 package model;
 
+/**
+ * Clase que gestiona la administración de la naviera.
+ * Controla clientes, cargas y la gestión del barco.
+ */
 public class Naviera {
     private Cliente[] clientes;
     private Barco barco;
     private int numClientes;
 
     /**
-     * Inicializar el barco y el array de clientes
+     * Constructor de la naviera.
+     * Inicializa el barco "El Pirata" con una capacidad de 28000 kg y un máximo de
+     * 5 clientes.
      */
     public Naviera() {
         this.clientes = new Cliente[5];
@@ -15,9 +21,9 @@ public class Naviera {
     }
 
     /**
-     * Agrega un cliente a la lista si hay espacios disponibles
-     * 
-     * @param cliente a agregar
+     * Agrega un cliente a la naviera.
+     *
+     * @param cliente Cliente a agregar.
      */
     public void addCliente(Cliente cliente) {
         if (numClientes < clientes.length) {
@@ -29,10 +35,10 @@ public class Naviera {
     }
 
     /**
-     * Busca un cliente por su NIT
-     * 
-     * @param nit del cliente
-     * @return Cliente encontrado o null si no existe
+     * Busca un cliente por su NIT.
+     *
+     * @param nit NIT del cliente.
+     * @return Cliente encontrado o `null` si no existe.
      */
     public Cliente buscarClientePorNit(String nit) {
         for (Cliente cliente : clientes) {
@@ -44,12 +50,12 @@ public class Naviera {
     }
 
     /**
-     * Cargar el Barco pasandole los siguientes datos
-     * 
-     * @param nitCliente
-     * @param tipoCarga
-     * @param numCajas
-     * @param pesoTotal
+     * Agrega una carga al barco si hay espacio disponible.
+     *
+     * @param nitCliente NIT del cliente.
+     * @param tipoCarga  Tipo de carga (1=Normal, 2=Peligrosa, 3=Perecedera).
+     * @param numCajas   Número de cajas.
+     * @param pesoTotal  Peso total de la carga en kg.
      */
     public void cargarBarco(String nitCliente, int tipoCarga, int numCajas, double pesoTotal) {
         Cliente cliente = buscarClientePorNit(nitCliente);
@@ -71,11 +77,11 @@ public class Naviera {
     }
 
     /**
-     * Calcular el precio a pagar
-     * 
-     * @param peso
-     * @param tipoCarga
-     * @return retorna el precio total
+     * Calcula el costo de transporte de una carga según su tipo.
+     *
+     * @param peso      Peso de la carga.
+     * @param tipoCarga Tipo de carga (1=Normal, 2=Peligrosa, 3=Perecedera).
+     * @return Costo total del transporte.
      */
     public double calcularCosto(double peso, int tipoCarga) {
         double tarifa = (tipoCarga == 1) ? 80000 : (tipoCarga == 2) ? 390000 : 250000;
@@ -83,7 +89,8 @@ public class Naviera {
     }
 
     /**
-     * Actualiza la categoria automaticamente
+     * Actualiza la categoría de los clientes según sus kilos transportados y dinero
+     * pagado.
      */
     public void actualizarCategorias() {
         for (Cliente cliente : clientes) {
@@ -103,10 +110,10 @@ public class Naviera {
     }
 
     /**
-     * Actualizar la categoria manualmente
-     * 
-     * @param nit
-     * @param nuevaCategoria
+     * Cambia la categoría de un cliente manualmente.
+     *
+     * @param nit            NIT del cliente.
+     * @param nuevaCategoria Nueva categoría a asignar.
      */
     public void editarCategoriaCliente(String nit, String nuevaCategoria) {
         Cliente cliente = buscarClientePorNit(nit);
@@ -118,15 +125,28 @@ public class Naviera {
         }
     }
 
+    /**
+     * Descarga todas las cargas del barco.
+     */
     public void descargarBarco() {
         barco.limpiarCarga();
         System.out.println("El barco ha sido descargado.");
     }
 
+    /**
+     * Obtiene el peso actual del barco.
+     *
+     * @return Peso total de las cargas a bordo.
+     */
     public double getPesoActualBarco() {
         return barco.getPesoActual();
     }
 
+    /**
+     * Obtiene la lista de clientes registrados.
+     *
+     * @return Arreglo de clientes.
+     */
     public Cliente[] getClientes() {
         return clientes;
     }

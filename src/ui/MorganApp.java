@@ -7,17 +7,29 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Clase principal que gestiona la interfaz de usuario del sistema de la
+ * naviera.
+ * Permite la creación de clientes, carga del barco, actualización de
+ * categorías,
+ * y otras funciones relacionadas con la administración del barco y clientes.
+ */
 public class MorganApp {
     private Naviera naviera;
     private Scanner scanner;
 
+    /**
+     * Constructor de la aplicación.
+     * Inicializa la naviera y el escáner para la entrada de datos.
+     */
     public MorganApp() {
         this.naviera = new Naviera();
         this.scanner = new Scanner(System.in);
     }
 
     /**
-     * El Menu :)
+     * Método principal del menú de la aplicación.
+     * Permite al usuario navegar entre las opciones del sistema.
      */
     public void menu() {
         int opcion;
@@ -31,8 +43,9 @@ public class MorganApp {
             System.out.println("6. Mostrar peso actual del barco");
             System.out.println("7. Salir");
             System.out.print("Seleccione una opcion: ");
+
             opcion = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Limpiar buffer
 
             switch (opcion) {
                 case 1:
@@ -63,7 +76,9 @@ public class MorganApp {
     }
 
     /**
-     * Pedir los datos para crear el cliente
+     * Permite al usuario ingresar los datos necesarios para registrar un nuevo
+     * cliente.
+     * Se solicita el nombre, NIT y la fecha de expedición.
      */
     private void crearCliente() {
         System.out.print("Ingrese el nombre: ");
@@ -79,9 +94,9 @@ public class MorganApp {
 
     /**
      * Permite al usuario ingresar una fecha en formato "dd/MM/yyyy" y la convierte
-     * en LocalDate
-     * 
-     * @return la fecha ingresada como localDate
+     * en LocalDate.
+     *
+     * @return La fecha ingresada como LocalDate.
      */
     private LocalDate ingresarFecha() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -99,7 +114,10 @@ public class MorganApp {
     }
 
     /**
-     * Pedir datos para cargar el barco
+     * Permite al usuario ingresar los datos necesarios para cargar el barco con una
+     * carga.
+     * Se solicita el NIT del cliente, el tipo de carga, el número de cajas y el
+     * peso por caja.
      */
     private void cargarBarco() {
         System.out.print("Ingrese el NIT del cliente: ");
@@ -116,23 +134,23 @@ public class MorganApp {
         int numCajas = scanner.nextInt();
         System.out.print("Ingrese el peso por caja (en gramos): ");
         double pesoPorCaja = scanner.nextDouble();
-        scanner.nextLine();
+        scanner.nextLine(); // Limpiar buffer
 
         double pesoTotal = (pesoPorCaja * numCajas) / 1000; // Convertir gramos a kg
         naviera.cargarBarco(nit, tipoCarga, numCajas, pesoTotal);
     }
 
     /**
-     * Mostrar los clientes existentes
+     * Muestra la lista de clientes registrados en la naviera.
      */
     private void mostrarClientes() {
-        System.out.println("\n Lista de clientes:");
+        System.out.println("\nLista de clientes:");
         boolean hayClientes = false;
 
         for (Cliente cliente : naviera.getClientes()) {
-            if (cliente != null) { // Validamos que el cliente no sea null antes de acceder a sus datos
-                System.out.println(cliente.getNit() + " | " + cliente.getNombre() + " | Tipo: "
-                        + cliente.getTipoCliente());
+            if (cliente != null) {
+                System.out.println(
+                        cliente.getNit() + " | " + cliente.getNombre() + " | Tipo: " + cliente.getTipoCliente());
                 hayClientes = true;
             }
         }
@@ -143,32 +161,34 @@ public class MorganApp {
     }
 
     /**
-     * Actualizar la categoria de los clientes, con dos opciones automatica y manual
+     * Permite actualizar la categoría de los clientes.
+     * Se ofrece la opción de actualización automática o manual.
      */
     private void actualizarCategoriaClientes() {
-        System.out.println("\n Actualizar categorias de clientes");
+        System.out.println("\nActualizar categorías de clientes");
+        System.out.println("1. Actualizar automáticamente todas las categorías");
+        System.out.println("2. Editar manualmente la categoría de un cliente");
+        System.out.print("Seleccione una opción: ");
 
-        System.out.println("1. Actualizar automaticamente todas las categorias");
-        System.out.println("2. Editar manualmente la categoria de un cliente");
-        System.out.print("Seleccione una opcion: ");
         int opcion = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Limpiar buffer
 
         switch (opcion) {
             case 1:
                 naviera.actualizarCategorias();
-                System.out.println("Categorias actualizadas automaticamente.");
+                System.out.println("Categorías actualizadas automáticamente.");
                 break;
             case 2:
                 editarCategoriaManual();
                 break;
             default:
-                System.out.println("Opción invalida.");
+                System.out.println("Opción inválida.");
         }
     }
 
     /**
-     * Poder editar manualmente la categoria del cliente pidiendo el nit
+     * Permite al usuario editar manualmente la categoría de un cliente mediante su
+     * NIT.
      */
     private void editarCategoriaManual() {
         System.out.print("Ingrese el NIT del cliente que desea editar: ");
@@ -180,14 +200,15 @@ public class MorganApp {
             return;
         }
 
-        System.out.println("\n Categorias disponibles:");
+        System.out.println("\nCategorías disponibles:");
         System.out.println("1. Normal");
         System.out.println("2. Plata");
         System.out.println("3. Oro");
         System.out.println("4. Platinum");
-        System.out.print("Seleccione la nueva categoria: ");
+        System.out.print("Seleccione la nueva categoría: ");
+
         int opcion = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Limpiar buffer
 
         String nuevaCategoria;
         switch (opcion) {
@@ -204,23 +225,34 @@ public class MorganApp {
                 nuevaCategoria = "Platinum";
                 break;
             default:
-                System.out.println("Opción invalida. No se actualizo la categoria.");
+                System.out.println("Opción inválida. No se actualizó la categoría.");
                 return;
         }
 
         cliente.setTipoCliente(nuevaCategoria);
-        System.out.println("Categoria actualizada con exito a: " + nuevaCategoria);
+        System.out.println("Categoría actualizada con éxito a: " + nuevaCategoria);
     }
 
+    /**
+     * Descarga todas las cargas del barco.
+     */
     private void descargarBarco() {
         naviera.descargarBarco();
     }
 
+    /**
+     * Muestra el peso actual del barco con las cargas transportadas.
+     */
     private void mostrarPesoBarco() {
         double peso = naviera.getPesoActualBarco();
         System.out.println("El barco actualmente transporta " + peso + " kg.");
     }
 
+    /**
+     * Método principal que inicia la aplicación.
+     *
+     * @param args Argumentos de la línea de comandos (no utilizados).
+     */
     public static void main(String[] args) {
         MorganApp app = new MorganApp();
         app.menu();

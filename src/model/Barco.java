@@ -1,77 +1,87 @@
 package model;
 
+import java.util.ArrayList;
+
+/**
+ * Representa un barco con una capacidad máxima de carga.
+ * Permite agregar y eliminar cargas respetando la capacidad máxima.
+ */
 public class Barco {
-    // Atributos
     private String nombre;
     private double capacidad;
+    private ArrayList<Carga> misCargas;
 
-    // Relaciones
-    private Carga[] misCargas;
-
-    // Constructor
-    public Barco(String n, double c) {
-        this.nombre = n;
-        this.capacidad = c;
-        misCargas = new Carga[200]; // Se mantiene el arreglo
+    /**
+     * Constructor del barco.
+     *
+     * @param nombre    Nombre del barco.
+     * @param capacidad Capacidad máxima en kilogramos.
+     */
+    public Barco(String nombre, double capacidad) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.misCargas = new ArrayList<>();
     }
 
-    // Getters y Setters
+    /**
+     * Obtiene el nombre del barco.
+     *
+     * @return Nombre del barco.
+     */
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String newNombre) {
-        nombre = newNombre;
-    }
-
+    /**
+     * Obtiene la capacidad máxima del barco.
+     *
+     * @return Capacidad en kilogramos.
+     */
     public double getCapacidad() {
         return capacidad;
     }
 
-    public void setCapacidad(double newCap) {
-        capacidad = newCap;
-    }
-
     /**
-     * Retorna el peso actual de la carga en el barco
-     * 
-     * @return Peso total de la carga
+     * Calcula el peso total de todas las cargas a bordo.
+     *
+     * @return Peso total de las cargas.
      */
     public double getPesoTotal() {
         double total = 0;
-        for (int i = 0; i < misCargas.length; i++) {
-            if (misCargas[i] != null) {
-                total += misCargas[i].getPesoTotal();
-            }
+        for (Carga carga : misCargas) {
+            total += carga.getPesoTotal();
         }
         return total;
     }
 
-    // Método para obtener el peso actual en el barco
+    /**
+     * Obtiene el peso actual del barco.
+     *
+     * @return Peso total de las cargas.
+     */
     public double getPesoActual() {
         return getPesoTotal();
     }
 
-    // Método para limpiar la carga después de un viaje
+    /**
+     * Elimina todas las cargas del barco.
+     */
     public void limpiarCarga() {
-        for (int i = 0; i < misCargas.length; i++) {
-            misCargas[i] = null;
-        }
+        misCargas.clear();
     }
 
-    // Método para agregar carga si es posible
+    /**
+     * Agrega una carga al barco si no excede la capacidad.
+     *
+     * @param nuevaCarga Carga a agregar.
+     * @return `true` si la carga se agregó correctamente, `false` si excede la
+     *         capacidad.
+     */
     public boolean agregarCarga(Carga nuevaCarga) {
         if (getPesoTotal() + nuevaCarga.getPesoTotal() > capacidad) {
             return false;
         }
-
-        for (int i = 0; i < misCargas.length; i++) {
-            if (misCargas[i] == null) {
-                misCargas[i] = nuevaCarga;
-                return true;
-            }
-        }
-        return false;
+        misCargas.add(nuevaCarga);
+        return true;
     }
-
 }
